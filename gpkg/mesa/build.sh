@@ -14,7 +14,6 @@ TERMUX_PKG_PYTHON_COMMON_DEPS="mako, setuptools, pyyaml"
 
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -D android-libbacktrace=disabled
--D dri3=enabled
 -D egl=enabled
 -D gallium-opencl=icd
 -D gallium-drivers=freedreno,swrast,virgl,zink,lima,panfrost
@@ -22,12 +21,11 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -D gallium-nine=true
 -D gallium-va=enabled
 -D gallium-vdpau=enabled
--D gallium-omx=bellagio
 -D gallium-xa=disabled
 -D gbm=enabled
 -D gles1=enabled
 -D gles2=enabled
--D glvnd=true
+-D glvnd=enabled
 -D glx=dri
 -D intel-clc=system
 -D libunwind=disabled
@@ -42,7 +40,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 
 termux_step_pre_configure() {
 	case $TERMUX_ARCH in
-		arm|aarch64) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast,panfrost,freedreno -Dfreedreno-kmds=msm,kgsl,virtio,wsl";;
+		arm|aarch64) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast,panfrost,freedreno,virtio -Dfreedreno-kmds=msm,kgsl,virtio,wsl";;
 		*) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast";;
 	esac
 	export MESON_PACKAGE_CACHE_DIR="${TERMUX_PKG_SRCDIR}"
