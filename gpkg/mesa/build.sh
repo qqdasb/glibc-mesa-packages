@@ -8,7 +8,7 @@ TERMUX_PKG_SRCURL=git+https://gitlab.freedesktop.org/mesa/mesa.git
 TERMUX_PKG_GIT_BRANCH="main"
 TERMUX_PKG_DEPENDS="libglvnd-glibc, gcc-libs-glibc, libdrm-glibc, libllvm-glibc, libexpat-glibc, zlib-glibc, zstd-glibc, libx11-glibc, libxcb-glibc, libxext-glibc, libxfixes-glibc, libxshmfence-glibc, libxxf86vm-glibc, libwayland-glibc, libvdpau-glibc, libomxil-bellagio-glibc, libva-glibc, libxml2-glibc, libelf-glibc, libbz2-glibc, libclc-glibc"
 TERMUX_PKG_SUGGESTS="mesa-dev-glibc"
-TERMUX_PKG_BUILD_DEPENDS="llvm-glibc, libwayland-protocols-glibc (<= 1.38), xorgproto-glibc, glslang-glibc, libwayland-glibc"
+TERMUX_PKG_BUILD_DEPENDS="llvm-glibc, libwayland-protocols-glibc (<= 1.38), xorgproto-glibc, glslang-glibc, libwayland-glibc, libpng-glibc"
 TERMUX_PKG_PYTHON_COMMON_DEPS="mako, setuptools, pyyaml"
 # disabling libunwind, microsoft-clc and valgrind will improve performance
 
