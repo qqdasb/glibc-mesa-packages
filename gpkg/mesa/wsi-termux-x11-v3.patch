@@ -37,9 +37,9 @@ diff --git a/src/vulkan/wsi/wsi_common.c b/src/vulkan/wsi/wsi_common.c
 index 726862560e8..3539a585d22 100644
 --- a/src/vulkan/wsi/wsi_common.c
 +++ b/src/vulkan/wsi/wsi_common.c
-@@ -1424,7 +1424,7 @@ wsi_common_queue_present(const struct wsi_device *wsi,
-       assert(!has_signal_dma_buf);
+@@ -1554,7 +1554,7 @@
  #endif
+       }
  
 -      if (wsi->sw)
 +      if (wsi->sw || (wsi->is_tu_kgsl && !has_signal_dma_buf))
@@ -256,24 +256,24 @@ diff --git a/src/vulkan/wsi/wsi_common_x11.c b/src/vulkan/wsi/wsi_common_x11.c
 index 2dff27afa64..1ba21660bab 100644
 --- a/src/vulkan/wsi/wsi_common_x11.c
 +++ b/src/vulkan/wsi/wsi_common_x11.c
-@@ -1617,7 +1617,7 @@ x11_present_to_x11_dri3(struct x11_swapchain *chain, uint32_t image_index,
+@@ -1406,7 +1406,7 @@
+    if (chain->has_dri3_modifiers)
        options |= XCB_PRESENT_OPTION_SUBOPTIMAL;
- #endif
  
 -   xshmfence_reset(image->shm_fence);
 +   xcb_sync_reset_fence(chain->conn, image->sync_fence);
  
-    ++chain->sent_image_count;
-    assert(chain->sent_image_count <= chain->base.image_count);
-@@ -1749,7 +1749,7 @@ x11_acquire_next_image(struct wsi_swapchain *anv_chain,
-    assert(*image_index < chain->base.image_count);
+    if (!chain->base.image_info.explicit_sync) {
+       ++chain->sent_image_count;
+@@ -1782,7 +1782,7 @@
+ #ifdef HAVE_X11_DRM
     if (chain->images[*image_index].shm_fence &&
         !chain->base.image_info.explicit_sync)
 -      xshmfence_await(chain->images[*image_index].shm_fence);
 +      xcb_sync_await_fence(chain->conn, 1, &chain->images[*image_index].sync_fence);
-
+ #endif
+ 
     return result;
- }
 @@ -2185,14 +2185,23 @@ x11_image_init(VkDevice device_h, struct x11_swapchain *chain,
           return VK_ERROR_OUT_OF_HOST_MEMORY;
  
@@ -306,9 +306,9 @@ index 2dff27afa64..1ba21660bab 100644
     }
  
     error = xcb_request_check(chain->conn, cookie);
-@@ -2201,6 +2210,11 @@ x11_image_init(VkDevice device_h, struct x11_swapchain *chain,
-       goto fail_image;
+@@ -2184,6 +2184,11 @@
     }
+ #endif
  
 +   image->sync_fence = xcb_generate_id(chain->conn);
 +   xcb_sync_create_fence(chain->conn, image->pixmap, image->sync_fence, false);
@@ -318,11 +318,11 @@ index 2dff27afa64..1ba21660bab 100644
  out_fence:
     fence_fd = xshmfence_alloc_shm();
     if (fence_fd < 0)
-@@ -2245,7 +2260,6 @@ x11_image_finish(struct x11_swapchain *chain,
-    if (!chain->base.wsi->sw || chain->has_mit_shm) {
+@@ -2229,7 +2229,6 @@
+ #ifdef HAVE_X11_DRM
        cookie = xcb_sync_destroy_fence(chain->conn, image->sync_fence);
        xcb_discard_reply(chain->conn, cookie.sequence);
 -      xshmfence_unmap_shm(image->shm_fence);
+ #endif
  
        cookie = xcb_free_pixmap(chain->conn, image->pixmap);
-       xcb_discard_reply(chain->conn, cookie.sequence);

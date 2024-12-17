@@ -1,4 +1,3 @@
-From https://github.com/xMeM/termux-packages/commit/57b1bb44c9eed341c700105efed93f9fd8bc34a6
 diff --git a/src/gallium/drivers/freedreno/freedreno_screen.c b/src/gallium/drivers/freedreno/freedreno_screen.c
 index 1c6401aa968..cf45d1def86 100644
 --- a/src/gallium/drivers/freedreno/freedreno_screen.c
