@@ -16,7 +16,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -D android-libbacktrace=disabled
 -D egl=enabled
 -D gallium-opencl=icd
--D gallium-drivers=freedreno,swrast,virgl,zink,lima,panfrost
+-D gallium-drivers=freedreno,swrast,virgl,zink
 -D gallium-extra-hud=true
 -D gallium-nine=true
 -D gallium-va=enabled
@@ -40,7 +40,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 
 termux_step_pre_configure() {
 	case $TERMUX_ARCH in
-		arm|aarch64) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast,panfrost,freedreno,virtio -Dfreedreno-kmds=msm,kgsl,virtio,wsl";;
+		arm|aarch64) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast,freedreno,virtio -Dfreedreno-kmds=msm,kgsl,virtio,wsl";;
 		*) TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -Dvulkan-drivers=swrast";;
 	esac
 	export MESON_PACKAGE_CACHE_DIR="${TERMUX_PKG_SRCDIR}"
